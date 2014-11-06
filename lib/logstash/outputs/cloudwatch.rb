@@ -146,10 +146,10 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
   # The name of the field used to set the dimensions on an event metric   
   # The field named here, if present in an event, must have an array of
   # one or more key & value pairs, for example...
-  #     add_field => [ "CW_dimensions", "Environment", "CW_dimensions", "prod" ]
+  #     `add_field => [ "CW_dimensions", "Environment", "CW_dimensions", "prod" ]`
   # or, equivalently...
-  #     add_field => [ "CW_dimensions", "Environment" ]
-  #     add_field => [ "CW_dimensions", "prod" ]
+  #     `add_field => [ "CW_dimensions", "Environment" ]`
+  #     `add_field => [ "CW_dimensions", "prod" ]`
   config :field_dimensions, :validate => :string, :default => "CW_dimensions"
 
   public
