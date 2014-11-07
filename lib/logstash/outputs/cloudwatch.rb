@@ -57,9 +57,9 @@ require "logstash/plugin_mixins/aws_config"
 # this output.  You can also set per-output defaults for any of them.
 # See below for details.
 #
-# Read more about [AWS CloudWatch](http://aws.amazon.com/cloudwatch/),
+# Read more about http://aws.amazon.com/cloudwatch/[AWS CloudWatch],
 # and the specific of API endpoint this output uses,
-# [PutMetricData](http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html)
+# http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html[PutMetricData]
 class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
   include LogStash::PluginMixins::AwsConfig
   
@@ -86,7 +86,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
   #
   # We only call the API if there is data to send.
   #
-  # See the Rufus Scheduler docs for an [explanation of allowed values](https://github.com/jmettraux/rufus-scheduler#the-time-strings-understood-by-rufus-scheduler)
+  # See the Rufus Scheduler docs for an https://github.com/jmettraux/rufus-scheduler#the-time-strings-understood-by-rufus-scheduler[explanation of allowed values]
   config :timeframe, :validate => :string, :default => "1m"
 
   # How many events to queue before forcing a call to the CloudWatch API ahead of `timeframe` schedule   
