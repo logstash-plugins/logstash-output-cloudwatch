@@ -167,7 +167,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
     @cw = AWS::CloudWatch.new(aws_options_hash)
 
     @event_queue = SizedQueue.new(@queue_size)
-    @scheduler = Rufus::Scheduler.start_new
+    @scheduler = Rufus::Scheduler.new
     @job = @scheduler.every @timeframe do
       @logger.info("Scheduler Activated")
       publish(aggregate({}))
