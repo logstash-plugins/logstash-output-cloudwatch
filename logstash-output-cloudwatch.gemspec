@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
 
   s.name            = 'logstash-output-cloudwatch'
-  s.version         = '0.1.4'
+  s.version         = '0.1.5'
   s.licenses        = ['Apache License (2.0)']
   s.summary         = "This output lets you aggregate and send metric data to AWS CloudWatch"
   s.description     = "This gem is a logstash plugin required to be installed on top of the Logstash core pipeline using $LS_HOME/bin/plugin install gemname. This gem is not a stand-alone program"
@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   # Gem dependencies
   s.add_runtime_dependency "logstash-core", '>= 1.4.0', '< 2.0.0'
   s.add_runtime_dependency 'logstash-mixin-aws'
-  s.add_runtime_dependency 'rufus-scheduler', [ '~> 2.0.24' ]
+  s.add_runtime_dependency 'rufus-scheduler', [ '~> 3.0.9' ]
   s.add_runtime_dependency 'aws-sdk'
 
   s.add_development_dependency 'logstash-devutils'
