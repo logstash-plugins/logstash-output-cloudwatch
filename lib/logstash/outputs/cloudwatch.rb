@@ -176,7 +176,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
 
   public
   def receive(event)
-    return unless output?(event)
+    
 
     if event == LogStash::SHUTDOWN
       job.trigger()
