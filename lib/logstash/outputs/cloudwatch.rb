@@ -226,10 +226,20 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
       end # data.each
 
       begin
-        @cw.put_metric_data(
-            :namespace => namespace,
-            :metric_data => metric_data
-        )
+        while (metric_data.length > 20)
+          new_metric_data = metric_data.shift(20)
+          @cw.put_metric_data(
+              :namespace => namespace,
+              :metric_data => new_metric_data
+          )
+          @logger.info("metric bigger than 20, send by own function")
+        end
+        if (metric_data.length > 0)
+          @cw.put_metric_data(
+              :namespace => namespace,
+              :metric_data => metric_data
+          )
+        end
         @logger.info("Sent data to AWS CloudWatch OK", :namespace => namespace, :metric_data => metric_data)
       rescue Exception => e
         @logger.warn("Failed to send to AWS CloudWatch", :exception => e, :namespace => namespace, :metric_data => metric_data)
