@@ -52,7 +52,7 @@ require "logstash/plugin_mixins/aws_config"
 # by their metric name (either a default or from their `CW_metricname` field)
 #
 # Other fields which can be added to events to modify the behavior of this
-# plugin are, `CW_namespace`, `CW_unit`, `CW_value`, and 
+# plugin are, `CW_namespace`, `CW_unit`, `CW_value`, and
 # `CW_dimensions`.  All of these field names are configurable in
 # this output.  You can also set per-output defaults for any of them.
 # See below for details.
@@ -62,7 +62,7 @@ require "logstash/plugin_mixins/aws_config"
 # http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html[PutMetricData]
 class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
   include LogStash::PluginMixins::AwsConfig
-  
+
   config_name "cloudwatch"
 
   # Constants
@@ -79,7 +79,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
   COUNT_UNIT = "Count"
   NONE = "None"
 
-  # How often to send data to CloudWatch   
+  # How often to send data to CloudWatch
   # This does not affect the event timestamps, events will always have their
   # actual timestamp (to-the-minute) sent to CloudWatch.
   #
@@ -88,7 +88,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
   # See the Rufus Scheduler docs for an https://github.com/jmettraux/rufus-scheduler#the-time-strings-understood-by-rufus-scheduler[explanation of allowed values]
   config :timeframe, :validate => :string, :default => "1m"
 
-  # How many events to queue before forcing a call to the CloudWatch API ahead of `timeframe` schedule   
+  # How many events to queue before forcing a call to the CloudWatch API ahead of `timeframe` schedule
   # Set this to the number of events-per-timeframe you will be sending to CloudWatch to avoid extra API calls
   config :queue_size, :validate => :number, :default => 10000
 
@@ -98,20 +98,20 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
   # The default namespace to use for events which do not have a `CW_namespace` field
   config :namespace, :validate => :string, :default => "Logstash"
 
-  # The name of the field used to set a different namespace per event   
+  # The name of the field used to set a different namespace per event
   # Note: Only one namespace can be sent to CloudWatch per API call
   # so setting different namespaces will increase the number of API calls
   # and those cost money.
   config :field_namespace, :validate => :string, :default => "CW_namespace"
 
-  # The default metric name to use for events which do not have a `CW_metricname` field.   
+  # The default metric name to use for events which do not have a `CW_metricname` field.
   # Beware: If this is provided then all events which pass through this output will be aggregated and
   # sent to CloudWatch, so use this carefully.  Furthermore, when providing this option, you
   # will probably want to also restrict events from passing through this output using event
   # type, tag, and field matching
   config :metricname, :validate => :string
 
-  # The name of the field used to set the metric name on an event   
+  # The name of the field used to set the metric name on an event
   # The author of this plugin recommends adding this field to events in inputs &
   # filters rather than using the per-output default setting so that one output
   # plugin on your logstash indexer can serve all events (which of course had
@@ -126,26 +126,26 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
                  "Bits/Second", "Kilobits/Second", "Megabits/Second",
                  "Gigabits/Second", "Terabits/Second", "Count/Second", NONE]
 
-  # The default unit to use for events which do not have a `CW_unit` field   
+  # The default unit to use for events which do not have a `CW_unit` field
   # If you set this option you should probably set the "value" option along with it
   config :unit, :validate => VALID_UNITS, :default => COUNT_UNIT
 
-  # The name of the field used to set the unit on an event metric   
+  # The name of the field used to set the unit on an event metric
   config :field_unit, :validate => :string, :default => "CW_unit"
 
-  # The default value to use for events which do not have a `CW_value` field   
+  # The default value to use for events which do not have a `CW_value` field
   # If provided, this must be a string which can be converted to a float, for example...
   #     "1", "2.34", ".5", and "0.67"
   # If you set this option you should probably set the `unit` option along with it
   config :value, :validate => :string, :default => "1"
 
-  # The name of the field used to set the value (float) on an event metric   
+  # The name of the field used to set the value (float) on an event metric
   config :field_value, :validate => :string, :default => "CW_value"
 
-  # The default dimensions [ name, value, ... ] to use for events which do not have a `CW_dimensions` field   
+  # The default dimensions [ name, value, ... ] to use for events which do not have a `CW_dimensions` field
   config :dimensions, :validate => :hash
 
-  # The name of the field used to set the dimensions on an event metric   
+  # The name of the field used to set the dimensions on an event metric
   # The field named here, if present in an event, must have an array of
   # one or more key & value pairs, for example...
   #     `add_field => [ "CW_dimensions", "Environment", "CW_dimensions", "prod" ]`
@@ -160,7 +160,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
         :cloud_watch_endpoint => "monitoring.#{region}.amazonaws.com"
     }
   end
-  
+
   public
   def register
     require "thread"
@@ -237,7 +237,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
           )
           @logger.info("Sent data to AWS CloudWatch OK", :namespace => namespace, :metric_data => batch)
         rescue Exception => e
-          @logger.warn("Failed to send to AWS CloudWatch", :exception => e, :namespace => namespace, :metric_data => metric_data)
+          @logger.warn("Failed to send to AWS CloudWatch", :exception => e, :namespace => namespace, :metric_data => batch)
           break
         end
       end
