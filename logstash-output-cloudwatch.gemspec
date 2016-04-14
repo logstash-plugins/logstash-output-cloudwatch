@@ -23,7 +23,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency "logstash-core-plugin-api", "~> 1.0"
   s.add_runtime_dependency 'logstash-mixin-aws', '>= 1.0.0'
   s.add_runtime_dependency 'rufus-scheduler', [ '~> 3.0.9' ]
-  s.add_runtime_dependency 'aws-sdk'
 
   s.add_development_dependency 'logstash-devutils'
 end

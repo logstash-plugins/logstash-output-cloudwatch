@@ -61,8 +61,8 @@ require "logstash/plugin_mixins/aws_config"
 # and the specific of API endpoint this output uses,
 # http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html[PutMetricData]
 class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
-  include LogStash::PluginMixins::AwsConfig
-
+  include LogStash::PluginMixins::AwsConfig::V2
+  
   config_name "cloudwatch"
 
   # Constants
@@ -155,19 +155,12 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
   config :field_dimensions, :validate => :string, :default => "CW_dimensions"
 
   public
-  def aws_service_endpoint(region)
-    return {
-        :cloud_watch_endpoint => "monitoring.#{region}.amazonaws.com"
-    }
-  end
-
-  public
   def register
     require "thread"
     require "rufus/scheduler"
-    require "aws"
+    require "aws-sdk"
 
-    @cw = AWS::CloudWatch.new(aws_options_hash)
+    @cw = Aws::CloudWatch::Client.new(aws_options_hash)
 
     @event_queue = SizedQueue.new(@queue_size)
     @scheduler = Rufus::Scheduler.new
