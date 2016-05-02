@@ -181,7 +181,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
       return
     end
 
-    return unless (event[@field_metricname] || @metricname)
+    return unless (event.get(@field_metricname) || @metricname)
 
     if (@event_queue.length >= @event_queue.max)
       @job.trigger
