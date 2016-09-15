@@ -165,7 +165,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
     @event_queue = SizedQueue.new(@queue_size)
     @scheduler = Rufus::Scheduler.new
     @job = @scheduler.every @timeframe do
-      @logger.info("Scheduler Activated")
+      @logger.debug("Scheduler Activated")
       publish(aggregate({}))
     end
   end # def register
@@ -188,14 +188,14 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
       @logger.warn("Posted to AWS CloudWatch ahead of schedule.  If you see this often, consider increasing the cloudwatch queue_size option.")
     end
 
-    @logger.info("Queueing event", :event => event)
+    @logger.debug("Queueing event", :event => event)
     @event_queue << event
   end # def receive
 
   private
   def publish(aggregates)
     aggregates.each do |namespace, data|
-      @logger.info("Namespace, data: ", :namespace => namespace, :data => data)
+      @logger.debug("Namespace, data: ", :namespace => namespace, :data => data)
       metric_data = []
       data.each do |aggregate_key, stats|
         new_data = {
@@ -227,7 +227,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
               :namespace => namespace,
               :metric_data => batch
           )
-          @logger.info("Sent data to AWS CloudWatch OK", :namespace => namespace, :metric_data => batch)
+          @logger.debug("Sent data to AWS CloudWatch OK", :namespace => namespace, :metric_data => batch)
         rescue Exception => e
           @logger.warn("Failed to send to AWS CloudWatch", :exception => e, :namespace => namespace, :metric_data => batch)
           break
@@ -239,7 +239,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
 
   private
   def aggregate(aggregates)
-    @logger.info("QUEUE SIZE ", :queuesize => @event_queue.size)
+    @logger.debug("QUEUE SIZE ", :queuesize => @event_queue.size)
     while !@event_queue.empty? do
       begin
         count(aggregates, @event_queue.pop(true))
