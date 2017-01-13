@@ -281,7 +281,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
       aggregates[namespace] = {}
     end
 
-    dims = event[@field_dimensions]
+    dims = event.get(@field_dimensions)
     if (dims) # event provides dimensions
               # validate the structure
       if (!dims.is_a?(Array) || dims.length == 0 || (dims.length % 2) != 0)
@@ -333,13 +333,13 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
 
   private
   def field(event, fieldname)
-    if !event[fieldname]
+    if !event.get(fieldname)
       return nil
     else
-      if event[fieldname].is_a?(Array)
-        return event[fieldname][0]
+      if event.get(fieldname).is_a?(Array)
+        return event.get(fieldname).first
       else
-        return event[fieldname]
+        return event.get(fieldname)
       end
     end
   end # def field
