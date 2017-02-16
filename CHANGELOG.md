@@ -1,3 +1,6 @@
+## 3.0.4
+  - Fix some remaining uses of the old event api. blocking the use of this plugin
+
 ## 3.0.3
   - Move some log messages from info to debug to avoid noise
 
