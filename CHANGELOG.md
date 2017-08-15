@@ -1,3 +1,6 @@
+## 3.0.6
+  - Fix some documentation issues
+
 ## 3.0.4
   - Fix some remaining uses of the old event api. blocking the use of this plugin
 
