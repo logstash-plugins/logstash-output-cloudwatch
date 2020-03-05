@@ -1,3 +1,6 @@
+## 3.1.0
+  - Relax constraints on rufus-scheduler to allow any 3.x version
+
 ## 3.0.8
   - Docs: Set the default_codec doc attribute.
 
