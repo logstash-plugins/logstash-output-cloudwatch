@@ -1,6 +1,6 @@
 # Logstash Plugin
 
-[![Travis Build Status](https://travis-ci.org/logstash-plugins/logstash-output-cloudwatch.svg)](https://travis-ci.org/logstash-plugins/logstash-output-cloudwatch)
+[![Travis Build Status](https://travis-ci.com/logstash-plugins/logstash-output-cloudwatch.svg)](https://travis-ci.com/logstash-plugins/logstash-output-cloudwatch)
 
 This is a plugin for [Logstash](https://github.com/elastic/logstash).
 
