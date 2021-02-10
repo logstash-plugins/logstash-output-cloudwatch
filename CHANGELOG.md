@@ -1,3 +1,6 @@
+## 3.0.9
+- Fix: dropped usage of SHUTDOWN event deprecated since Logstash 5.0 [#18](https://github.com/logstash-plugins/logstash-output-cloudwatch/pull/18)
+
 ## 3.0.8
   - Docs: Set the default_codec doc attribute.
 
