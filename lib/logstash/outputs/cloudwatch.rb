@@ -172,15 +172,6 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
 
   public
   def receive(event)
-    
-
-    if event == LogStash::SHUTDOWN
-      job.trigger()
-      job.unschedule()
-      @logger.info("CloudWatch aggregator thread shutdown.")
-      return
-    end
-
     return unless (event.get(@field_metricname) || @metricname)
 
     if (@event_queue.length >= @event_queue.max)
