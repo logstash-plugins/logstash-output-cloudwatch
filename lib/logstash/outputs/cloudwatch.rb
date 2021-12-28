@@ -3,6 +3,8 @@ require "logstash/outputs/base"
 require "logstash/namespace"
 require "logstash/plugin_mixins/aws_config"
 
+require "rufus/scheduler"
+
 # This output lets you aggregate and send metric data to AWS CloudWatch
 #
 # ==== Summary:
@@ -154,28 +156,31 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
   #     `add_field => [ "CW_dimensions", "prod" ]`
   config :field_dimensions, :validate => :string, :default => "CW_dimensions"
 
+  attr_reader :event_queue
+
   public
   def register
     require "thread"
-    require "rufus/scheduler"
     require "aws-sdk"
 
     @cw = Aws::CloudWatch::Client.new(aws_options_hash)
 
     @event_queue = SizedQueue.new(@queue_size)
     @scheduler = Rufus::Scheduler.new
-    @job = @scheduler.every @timeframe do
+    @job = @scheduler.schedule_every @timeframe do
       @logger.debug("Scheduler Activated")
       publish(aggregate({}))
     end
   end # def register
+
+  RufusTimeImpl = defined?(Rufus::Scheduler::Job::EoTime) ? Rufus::Scheduler::Job::EoTime : ::Time
 
   public
   def receive(event)
     return unless (event.get(@field_metricname) || @metricname)
 
     if (@event_queue.length >= @event_queue.max)
-      @job.trigger
+      @job.trigger RufusTimeImpl.now
       @logger.warn("Posted to AWS CloudWatch ahead of schedule.  If you see this often, consider increasing the cloudwatch queue_size option.")
     end
 
