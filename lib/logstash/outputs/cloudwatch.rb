@@ -173,7 +173,10 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
     end
   end # def register
 
-  RufusTimeImpl = defined?(Rufus::Scheduler::Job::EoTime) ? Rufus::Scheduler::Job::EoTime : ::Time
+  # Rufus::Scheduler >= 3.4 moved the Time impl into a gem EoTime = ::EtOrbi::EoTime`
+  # Rufus::Scheduler 3.1 - 3.3 using it's own Time impl `Rufus::Scheduler::ZoTime`
+  RufusTimeImpl = defined?(Rufus::Scheduler::EoTime) ? Rufus::Scheduler::EoTime :
+                      (defined?(Rufus::Scheduler::ZoTime) ? Rufus::Scheduler::ZoTime : ::Time)
 
   public
   def receive(event)
