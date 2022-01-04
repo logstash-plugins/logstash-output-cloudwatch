@@ -1,5 +1,9 @@
+## 3.0.10
+  - Deps: unpin rufus scheduler [#20](https://github.com/logstash-plugins/logstash-output-cloudwatch/pull/20)
+  - Fix: an old undefined method error which would surface with load (as queue fills up) 
+
 ## 3.0.9
-- Fix: dropped usage of SHUTDOWN event deprecated since Logstash 5.0 [#18](https://github.com/logstash-plugins/logstash-output-cloudwatch/pull/18)
+  - Fix: dropped usage of SHUTDOWN event deprecated since Logstash 5.0 [#18](https://github.com/logstash-plugins/logstash-output-cloudwatch/pull/18)
 
 ## 3.0.8
   - Docs: Set the default_codec doc attribute.
