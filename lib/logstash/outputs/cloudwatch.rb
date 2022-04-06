@@ -215,7 +215,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
   public
   def register
     require "thread"
-    require "aws-sdk"
+    require "aws-sdk-cloudwatch"
 
     @cw = Aws::CloudWatch::Client.new(aws_options_hash)
 
