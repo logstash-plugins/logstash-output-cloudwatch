@@ -1,3 +1,6 @@
+## 3.1.0
+  - Refactor: switch to using the scheduler mixin [#22](https://github.com/logstash-plugins/logstash-output-cloudwatch/pull/22)
+
 ## 3.0.10
   - Deps: unpin rufus scheduler [#20](https://github.com/logstash-plugins/logstash-output-cloudwatch/pull/20)
   - Fix: an old undefined method error which would surface with load (as queue fills up) 
