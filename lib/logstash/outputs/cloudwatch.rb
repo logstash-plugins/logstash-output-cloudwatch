@@ -2,8 +2,7 @@
 require "logstash/outputs/base"
 require "logstash/namespace"
 require "logstash/plugin_mixins/aws_config"
-
-require "rufus/scheduler"
+require "logstash/plugin_mixins/scheduler"
 
 # This output lets you aggregate and send metric data to AWS CloudWatch
 #
@@ -64,6 +63,7 @@ require "rufus/scheduler"
 # http://docs.amazonwebservices.com/AmazonCloudWatch/latest/APIReference/API_PutMetricData.html[PutMetricData]
 class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
   include LogStash::PluginMixins::AwsConfig::V2
+  include LogStash::PluginMixins::Scheduler
   
   config_name "cloudwatch"
 
@@ -166,28 +166,25 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
     @cw = Aws::CloudWatch::Client.new(aws_options_hash)
 
     @event_queue = SizedQueue.new(@queue_size)
-    @scheduler = Rufus::Scheduler.new
-    @job = @scheduler.schedule_every @timeframe do
-      @logger.debug("Scheduler Activated")
-      publish(aggregate({}))
-    end
+
+    @job = scheduler.every(@timeframe) { do_publish }
   end # def register
 
-  # Rufus::Scheduler >= 3.4 moved the Time impl into a gem EoTime = ::EtOrbi::EoTime`
-  # Rufus::Scheduler 3.1 - 3.3 using it's own Time impl `Rufus::Scheduler::ZoTime`
-  RufusTimeImpl = defined?(Rufus::Scheduler::EoTime) ? Rufus::Scheduler::EoTime :
-                      (defined?(Rufus::Scheduler::ZoTime) ? Rufus::Scheduler::ZoTime : ::Time)
+  def do_publish
+    publish(aggregate({}))
+  end
+  private :do_publish
 
   public
   def receive(event)
     return unless (event.get(@field_metricname) || @metricname)
 
     if (@event_queue.length >= @event_queue.max)
-      @job.trigger RufusTimeImpl.now
+      do_publish
       @logger.warn("Posted to AWS CloudWatch ahead of schedule.  If you see this often, consider increasing the cloudwatch queue_size option.")
     end
 
-    @logger.debug("Queueing event", :event => event)
+    @logger.debug? && @logger.debug("Queueing event", :event => event.to_hash)
     @event_queue << event
   end # def receive
 
