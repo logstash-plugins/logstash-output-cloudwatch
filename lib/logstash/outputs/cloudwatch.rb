@@ -299,7 +299,7 @@ class LogStash::Outputs::CloudWatch < LogStash::Outputs::Base
         METRIC => (fmetric ? fmetric : event.sprintf(@metricname)),
         DIMENSIONS => dims,
         UNIT => unit,
-        TIMESTAMP => event.sprintf("%{+YYYY-MM-dd'T'HH:mm:00Z}")
+        TIMESTAMP => event.get('timestamp')
     }
 
     if (!aggregates[namespace][aggregate_key])
